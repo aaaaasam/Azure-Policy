@@ -1,0 +1,29 @@
+{
+    "AuditPort": {
+        "type": "Integer",
+        "metadata": {
+            "displayName": "高危端口",
+            "description": "高危端口，禁止任意使用"
+        }
+    },
+    "AllowNetUsing": {
+        "type": "String",
+        "metadata": {
+            "displayName": "允许使用网络",
+            "description": "允许使用的网络， CIDR:192.168.0.0/24"
+        }
+    },
+    "effect": {
+        "type": "String",
+        "metadata": {
+            "displayName": "操作",
+            "description": "如果匹配规则，执行的操作"
+        },
+        "allowedValues": [
+            "Audit",
+            "Disabled",
+            "Deny"
+        ],
+        "defaultValue": "Deny"
+    }
+}
