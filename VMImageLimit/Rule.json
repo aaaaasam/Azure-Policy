@@ -1,0 +1,36 @@
+{
+    "if": {
+        "allOf": [
+            {
+                "field": "type",
+                "in": [
+                    "Microsoft.Compute/virtualMachines",
+                    "Microsoft.Compute/VirtualMachineScaleSets"
+                ]
+            },
+            {
+                "anyOf": [
+                    {
+                        "allOf": [
+                            {
+                                "field": "Microsoft.Compute/virtualMachines/storageProfile.imageReference.id",
+                                "exists": "false"
+                            },
+                            {
+                                "value": "[format('{0}:{1}:{2}:{3}', field('Microsoft.Compute/imagePublisher'), field('Microsoft.Compute/imageOffer'), field('Microsoft.Compute/imageSku'), field('Microsoft.Compute/imageVersion'))]",
+                                "in": "[parameters('AllowPublicImageUrnList')]"
+                            }
+                        ]
+                    },
+                    {
+                        "field": "Microsoft.Compute/imageId",
+                        "in": "[parameters('AllowCustomerImageResourceIDList')]"
+                    }
+                ]
+            }           
+        ]
+    },
+    "then": {
+        "effect": "Deny"
+    }
+}

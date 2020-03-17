@@ -1,17 +1,17 @@
 {
     "parameters": {
         "AuditPort": {
-            "type": "Integer",
+            "type": "array",
             "metadata": {
                 "displayName": "高危端口",
                 "description": "高危端口，禁止任意使用"
             }
         },
         "AllowNetUsing": {
-            "type": "String",
+            "type": "array",
             "metadata": {
                 "displayName": "允许使用网络",
-                "description": "允许使用的网络， CIDR:192.168.0.0/24"
+                "description": "允许使用的网络， CIDR: 192.168.1.0/24"
             }
         },
         "effect": {
@@ -53,39 +53,35 @@
                                 },
                                 {
                                     "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
-                                    "equals": "[parameters('AuditPort')]"
+                                    "in": "[parameters('AuditPort')]"
                                 },
                                 {
-                                    "value": "[if(and(not(empty(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'))), contains(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'),'-')), contains(range(int(first(split(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'), '-'))), sub(add(int(last(split(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'), '-'))),1), int(first(split(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'), '-'))))),parameters('AuditPort')), 'false')]",
+                                    "value": "[if(and(not(empty(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'))), contains(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'),'-')), empty(intersection(range(int(first(split(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'), '-'))), sub(add(int(last(split(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'), '-'))), 1), int(first(split(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'), '-'))))), parameters('AuditPort'))), 'false')]",
                                     "equals": "true"
                                 },
                                 {
                                     "count": {
                                         "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
                                         "where": {
-                                            "value": "[if(and(not(empty(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')))), contains(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')),'-')), contains(range(int(first(split(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')), '-'))), sub(add(int(last(split(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')), '-'))),1), int(first(split(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')), '-'))))),parameters('AuditPort')), 'false')]",
+                                            "value": "[if(and(not(empty(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')))), contains(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')),'-')), empty(intersection(range(int(first(split(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')), '-'))), sub(add(int(last(split(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')), '-'))),1), int(first(split(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')), '-'))))),parameters('AuditPort'))), 'false')]",
                                             "equals": "true"
                                         }
                                     },
                                     "greater": 0
                                 },
                                 {
-                                    "not": {
-                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
-                                        "notEquals": "*"
-                                    }
+                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
+                                    "equals": "*"
                                 },
                                 {
-                                    "not": {
-                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
-                                        "notEquals": "[parameters('AuditPort')]"
-                                    }
+                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
+                                    "in": "[parameters('AuditPort')]"
                                 }
                             ]
                         },
                         {
                             "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
-                            "notEquals": "[parameters('AllowNetUsing')]"
+                            "notIn": "[parameters('AllowNetUsing')]"
                         }
                     ]
                 }

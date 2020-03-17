@@ -1,0 +1,85 @@
+{
+    "parameters": {
+        "listOfAllowedWindowsSKUs": {
+            "type": "Array",
+            "metadata": {
+                "description": "可为Windows 虚拟机指定的 SKU 列表。",
+                "displayName": "允许的Windows SKU",
+                "strongType": "VMSKUs"
+            }
+        },
+        "listOfAllowedLinuxSKUs": {
+            "type": "Array",
+            "metadata": {
+                "description": "可为Linux 虚拟机指定的 SKU 列表。",
+                "displayName": "允许的Linux SKU",
+                "strongType": "VMSKUs"
+            }
+        }
+    },
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "equals": "Microsoft.Compute/virtualMachines"
+                },
+                {
+                    "anyOf": [
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.osType",
+                                    "equals": "Linux"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/virtualMachines/sku.name",
+                                    "notIn": "[parameters('listOfAllowedLinuxSKUs')]"
+                                }
+                            ]
+                        },
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.osType",
+                                    "equals": "Windows"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/virtualMachines/sku.name",
+                                    "notIn": "[parameters('listOfAllowedWindowsSKUs')]"
+                                }
+                            ]
+                        },
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/virtualMachines/osProfile.windowsConfiguration",
+                                    "exists": "true"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/virtualMachines/sku.name",
+                                    "notIn": "[parameters('listOfAllowedWindowsSKUs')]"
+                                }
+                            ]
+                        },
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/virtualMachines/osProfile.windowsConfiguration",
+                                    "exists": "false"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/virtualMachines/sku.name",
+                                    "notIn": "[parameters('listOfAllowedLinuxSKUs')]"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "then": {
+            "effect": "Deny"
+        }
+    }
+}

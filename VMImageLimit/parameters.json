@@ -1,0 +1,16 @@
+{
+    "AllowCustomerImageResourceIDList": {
+        "type": "Array",
+        "metadata": {
+            "description": "可以使用的自定义镜像Resource ID",
+            "displayName": "允许使用的共有镜像"
+        }
+    },
+    "AllowPublicImageUrnList": {
+        "type": "Array",
+        "metadata": {
+            "description": "可以使用的共有镜像URN ID",
+            "displayName": "允许使用的共有镜像"
+        }
+    }
+}

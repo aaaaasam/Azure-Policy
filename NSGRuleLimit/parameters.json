@@ -1,16 +1,16 @@
 {
     "AuditPort": {
-        "type": "Integer",
+        "type": "Array",
         "metadata": {
             "displayName": "高危端口",
-            "description": "高危端口，禁止任意使用"
+            "description": "高危端口，禁止任意使用，列表元素必须为数字类型"
         }
     },
     "AllowNetUsing": {
-        "type": "String",
+        "type": "Array",
         "metadata": {
-            "displayName": "允许使用网络",
-            "description": "允许使用的网络， CIDR:192.168.0.0/24"
+            "displayName": "允许使用网络列表",
+            "description": "允许使用的网络， CIDR: 192.168.1.0/24"
         }
     },
     "effect": {

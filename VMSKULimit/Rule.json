@@ -1,0 +1,65 @@
+{
+    "if": {
+        "allOf": [
+            {
+                "field": "type",
+                "equals": "Microsoft.Compute/virtualMachines"
+            },
+            {
+                "anyOf": [
+                    {
+                        "allOf": [
+                            {
+                                "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.osType",
+                                "equals": "Linux"
+                            },
+                            {
+                                "field": "Microsoft.Compute/virtualMachines/sku.name",
+                                "notIn": "[parameters('listOfAllowedLinuxSKUs')]"
+                            }
+                        ]
+                    },
+                    {
+                        "allOf": [
+                            {
+                                "field": "Microsoft.Compute/virtualMachines/storageProfile.osDisk.osType",
+                                "equals": "Windows"
+                            },
+                            {
+                                "field": "Microsoft.Compute/virtualMachines/sku.name",
+                                "notIn": "[parameters('listOfAllowedWindowsSKUs')]"
+                            }
+                        ]
+                    },
+                    {
+                        "allOf": [
+                            {
+                                "field": "Microsoft.Compute/virtualMachines/osProfile.windowsConfiguration",
+                                "exists": "true"
+                            },
+                            {
+                                "field": "Microsoft.Compute/virtualMachines/sku.name",
+                                "notIn": "[parameters('listOfAllowedWindowsSKUs')]"
+                            }
+                        ]
+                    },
+                    {
+                        "allOf": [
+                            {
+                                "field": "Microsoft.Compute/virtualMachines/osProfile.windowsConfiguration",
+                                "exists": "false"
+                            },
+                            {
+                                "field": "Microsoft.Compute/virtualMachines/sku.name",
+                                "notIn": "[parameters('listOfAllowedLinuxSKUs')]"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "then": {
+        "effect": "Deny"
+    }
+}
