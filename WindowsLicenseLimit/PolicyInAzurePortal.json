@@ -1,0 +1,28 @@
+{
+    "parameters": {},
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "equals": "Microsoft.Compute/virtualMachines"
+                },
+                {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.Compute/virtualMachines/osProfile.windowsConfiguration",
+                            "exists": "true"
+                        },
+                        {
+                            "field": "Microsoft.Compute/virtualMachines/licenseType",
+                            "exists": "false"
+                        }
+                    ]
+                }
+            ]
+        },
+        "then": {
+            "effect": "Deny"
+        }
+    }
+}

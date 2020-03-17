@@ -1,0 +1,54 @@
+{
+    "parameters": {
+        "AllowCustomerImageResourceIDList": {
+            "type": "Array",
+            "metadata": {
+                "description": "可以使用的自定义镜像Resource ID",
+                "displayName": "允许使用的共有镜像"
+            }
+        },
+        "AllowPublicImageUrnList": {
+            "type": "Array",
+            "metadata": {
+                "description": "可以使用的共有镜像URN ID",
+                "displayName": "允许使用的共有镜像"
+            }
+        }
+    },
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "in": [
+                        "Microsoft.Compute/virtualMachines",
+                        "Microsoft.Compute/VirtualMachineScaleSets"
+                    ]
+                },
+                {
+                    "anyOf": [
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/virtualMachines/storageProfile.imageReference.id",
+                                    "exists": "false"
+                                },
+                                {
+                                    "value": "[format('{0}:{1}:{2}:{3}', field('Microsoft.Compute/imagePublisher'), field('Microsoft.Compute/imageOffer'), field('Microsoft.Compute/imageSku'), field('Microsoft.Compute/imageVersion'))]",
+                                    "in": "[parameters('AllowPublicImageUrnList')]"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "Microsoft.Compute/imageId",
+                            "in": "[parameters('AllowCustomerImageResourceIDList')]"
+                        }
+                    ]
+                }
+            ]
+        },
+        "then": {
+            "effect": "Deny"
+        }
+    }
+}
