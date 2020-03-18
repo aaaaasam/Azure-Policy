@@ -23,8 +23,17 @@
                         ]
                     },
                     {
-                        "field": "Microsoft.Compute/imageId",
-                        "notIn": "[parameters('AllowCustomerImageResourceIDList')]"
+                        "allOf": [
+                            {
+                                "field": "Microsoft.Compute/virtualMachines/storageProfile.imageReference.id",
+                                "exists": "true"
+                            },
+                            {
+                                "field": "Microsoft.Compute/imageId",
+                                "notIn": "[parameters('AllowCustomerImageResourceIDList')]"
+                            }
+                        ]
+                        
                     }
                 ]
             }           
