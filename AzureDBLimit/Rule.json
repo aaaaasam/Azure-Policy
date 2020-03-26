@@ -1,0 +1,91 @@
+{
+    "if": {
+        "anyOf": [
+            {
+                "allOf": [
+                    {
+                        "field": "type",
+                        "equals": "Microsoft.DBforMariaDB/servers"
+                    },
+                    {
+                        "anyOf": [
+                            {
+                                "field": "Microsoft.DBforMariaDB/servers/sku.capacity",
+                                "greater": "[parameters('vCoreLimit')]"
+                            },
+                            {
+                                "field": "Microsoft.DBforMariaDB/servers/storageProfile.storageMB",
+                                "greater": "[parameters('StorageSpaceLimit')]"
+                            },
+                            {
+                                "not": {
+                                    "field": "Microsoft.DBforMariaDB/servers/storageProfile.storageAutogrow",
+                                    "equals": "[parameters('StorageAutogrowLimit')]"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "allOf": [
+                    {
+                        "field": "type",
+                        "equals": "Microsoft.DBforPostgreSQL/servers"
+                    },
+                    {
+                        "anyOf": [
+                            {
+                                "field": "Microsoft.DBforPostgreSQL/servers/sku.capacity",
+                                "greater": "[parameters('vCoreLimit')]"
+                            },
+                            {
+                                "field": "Microsoft.DBforPostgreSQL/servers/storageProfile.storageMB",
+                                "greater": "[parameters('StorageSpaceLimit')]"
+                            },
+                            {
+                                "not": {
+                                    "field": "Microsoft.DBforPostgreSQL/servers/storageProfile.storageAutogrow",
+                                    "equals": "[parameters('StorageAutogrowLimit')]"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "allOf": [
+                    {
+                        "field": "type",
+                        "equals": "Microsoft.DBforMySQL/servers"
+                    },
+                    {
+                        "anyOf": [
+                            {
+                                "field": "Microsoft.DBforMySQL/servers/sku.capacity",
+                                "greater": "[parameters('vCoreLimit')]"
+                            },
+                            {
+                                "field": "Microsoft.DBforMySQL/servers/storageProfile.storageMB",
+                                "greater": "[parameters('StorageSpaceLimit')]"
+                            },
+                            {
+                                "not": {
+                                    "field": "Microsoft.DBforMySQL/servers/storageProfile.storageAutogrow",
+                                    "equals": "[parameters('StorageAutogrowLimit')]"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "field": "type",
+                "equals": "Microsoft.Sql/servers/elasticpools"
+            }
+        ]
+    },
+    "then": {
+        "effect": "deny"
+    }
+}

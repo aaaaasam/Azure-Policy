@@ -1,0 +1,32 @@
+{
+    "parameters": {},
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "equals": "Microsoft.DBforPostgreSQL/servers"
+                },
+                {
+                    "anyOf": [
+                        {
+                            "field": "Microsoft.DBforPostgreSQL/servers/sku.capacity",
+                            "greater": 8
+                        },
+                        {
+                            "field": "Microsoft.DBforPostgreSQL/servers/storageProfile.storageMB",
+                            "greater": 102400
+                        },
+                        {
+                            "field": "Microsoft.DBforPostgreSQL/servers/storageProfile.storageAutogrow",
+                            "equals": "Disabled"
+                        }
+                    ]
+                }
+            ]
+        },
+        "then": {
+            "effect": "Deny"
+        }
+    }
+}

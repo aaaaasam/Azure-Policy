@@ -1,0 +1,9 @@
+{
+    "if": {
+        "field": "type",
+        "equals": "Microsoft.Sql/servers/elasticpools"
+    },
+    "then": {
+        "effect": "Deny"
+    }
+}

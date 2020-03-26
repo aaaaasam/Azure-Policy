@@ -11,14 +11,14 @@ resource "azurerm_policy_definition" "vmlimit" {
   mode         = "all"
   display_name = "vm limt"
 
-  policy_rule  = file("<rule file path>")
-  parameters   = file("<parameters file path>")
+  policy_rule  = "${file("<rule file path>")}"
+  parameters   = "${file("<parameters file path>")}"
 }
 
 resource "azurerm_policy_assignment" "Assignment-vmlimit" {
   name                 = "vmlimit"
-  scope                = data.azurerm_subscription.SubscriptionObject.id
-  policy_definition_id = data.azurerm_policy_definition.vmlimit.id
+  scope                = "${data.azurerm_subscription.SubscriptionObject.id}"
+  policy_definition_id = "${data.azurerm_policy_definition.vmlimit.id}}"
   description          = "vm limit"
   display_name         = "vm-limit"
 

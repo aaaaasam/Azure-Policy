@@ -1,0 +1,119 @@
+{
+    "parameters": {
+        "vCoreLimit": {
+            "type": "Integer",
+            "metadata": {
+                "description": "核数限制",
+                "displayName": "vCore limit"
+            },
+            "defaultValue": 8
+        },
+        "StorageSpaceLimit": {
+            "type": "Integer",
+            "metadata": {
+                "description": "存储空间限制（MB）",
+                "displayName": "Storage Space limit"
+            },
+            "defaultValue": 102400
+        },
+        "StorageAutogrowLimit": {
+            "type": "String",
+            "metadata": {
+                "description": "存储自动增长配置",
+                "displayName": "Storage Auto Grow limit"
+            },
+            "defaultValue": "Enabled"
+        }
+    },
+    "policyRule": {
+        "if": {
+            "anyOf": [
+                {
+                    "allOf": [
+                        {
+                            "field": "type",
+                            "equals": "Microsoft.DBforMariaDB/servers"
+                        },
+                        {
+                            "anyOf": [
+                                {
+                                    "field": "Microsoft.DBforMariaDB/servers/sku.capacity",
+                                    "greater": "[parameters('vCoreLimit')]"
+                                },
+                                {
+                                    "field": "Microsoft.DBforMariaDB/servers/storageProfile.storageMB",
+                                    "greater": "[parameters('StorageSpaceLimit')]"
+                                },
+                                {
+                                    "not": {
+                                        "field": "Microsoft.DBforMariaDB/servers/storageProfile.storageAutogrow",
+                                        "equals": "[parameters('StorageAutogrowLimit')]"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "allOf": [
+                        {
+                            "field": "type",
+                            "equals": "Microsoft.DBforPostgreSQL/servers"
+                        },
+                        {
+                            "anyOf": [
+                                {
+                                    "field": "Microsoft.DBforPostgreSQL/servers/sku.capacity",
+                                    "greater": "[parameters('vCoreLimit')]"
+                                },
+                                {
+                                    "field": "Microsoft.DBforPostgreSQL/servers/storageProfile.storageMB",
+                                    "greater": "[parameters('StorageSpaceLimit')]"
+                                },
+                                {
+                                    "not": {
+                                        "field": "Microsoft.DBforPostgreSQL/servers/storageProfile.storageAutogrow",
+                                        "equals": "[parameters('StorageAutogrowLimit')]"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "allOf": [
+                        {
+                            "field": "type",
+                            "equals": "Microsoft.DBforMySQL/servers"
+                        },
+                        {
+                            "anyOf": [
+                                {
+                                    "field": "Microsoft.DBforMySQL/servers/sku.capacity",
+                                    "greater": "[parameters('vCoreLimit')]"
+                                },
+                                {
+                                    "field": "Microsoft.DBforMySQL/servers/storageProfile.storageMB",
+                                    "greater": "[parameters('StorageSpaceLimit')]"
+                                },
+                                {
+                                    "not": {
+                                        "field": "Microsoft.DBforMySQL/servers/storageProfile.storageAutogrow",
+                                        "equals": "[parameters('StorageAutogrowLimit')]"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "field": "type",
+                    "equals": "Microsoft.Sql/servers/elasticpools"
+                }
+            ]
+        },
+        "then": {
+            "effect": "deny"
+        }
+    }
+}

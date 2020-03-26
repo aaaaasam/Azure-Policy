@@ -1,0 +1,26 @@
+{
+    "vCoreLimit": {
+        "type": "Integer",
+        "metadata": {
+            "description": "核数限制",
+            "displayName": "vCore limit"
+        },
+        "defaultValue": 8
+    },
+    "StorageSpaceLimit": {
+        "type": "Integer",
+        "metadata": {
+            "description": "存储空间限制（MB）",
+            "displayName": "Storage Space limit"
+        },
+        "defaultValue": 102400
+    },
+    "StorageAutogrowLimit": {
+        "type": "String",
+        "metadata": {
+            "description": "存储自动增长配置",
+            "displayName": "Storage Auto Grow limit"
+        },
+        "defaultValue": "Enabled"
+    }
+}

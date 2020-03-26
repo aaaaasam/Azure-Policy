@@ -1,0 +1,29 @@
+{
+    "if": {
+        "allOf": [
+            {
+                "field": "type",
+                "equals": "Microsoft.DBforMySQL/servers"
+            },
+            {
+                "anyOf": [
+                    {
+                        "field": "Microsoft.DBforMySQL/servers/sku.capacity",
+                        "greater": 8
+                    },
+                    {
+                        "field": "Microsoft.DBforMySQL/servers/storageProfile.storageMB",
+                        "greater": 102400
+                    },
+                    {
+                        "field": "Microsoft.DBforMySQL/servers/storageProfile.storageAutogrow",
+                        "equals": "Disabled"
+                    }
+                ]
+            }
+        ]
+    },
+    "then": {
+        "effect": "Deny"
+    }
+}

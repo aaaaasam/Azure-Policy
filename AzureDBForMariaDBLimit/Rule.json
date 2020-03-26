@@ -1,0 +1,29 @@
+{
+    "if": {
+        "allOf": [
+            {
+                "field": "type",
+                "equals": "Microsoft.DBforMariaDB/servers"
+            },
+            {
+                "anyOf": [
+                    {
+                        "field": "Microsoft.DBforMariaDB/servers/sku.capacity",
+                        "greater": 8
+                    },
+                    {
+                        "field": "Microsoft.DBforMariaDB/servers/storageProfile.storageMB",
+                        "greater": 102400
+                    },
+                    {
+                        "field": "Microsoft.DBforMariaDB/servers/storageProfile.storageAutogrow",
+                        "equals": "Disabled"
+                    }
+                ]
+            }
+        ]
+    },
+    "then": {
+        "effect": "Deny"
+    }
+}
